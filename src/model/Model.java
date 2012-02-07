@@ -1,11 +1,9 @@
 package model;
 
 import java.awt.Dimension;
+import java.util.HashMap;
 
-import expression.Expression;
-
-
-
+import model.expression.Expression;
 
 /**
  * Evaluate an expression for each pixel in a image.
@@ -17,7 +15,24 @@ public class Model
     public static final double DOMAIN_MIN = -1;
     public static final double DOMAIN_MAX = 1;
 
+    public static final int NUM_FRAMES = 50;
 
+    private double myCurrentTime = -1;
+
+    public void reset ()
+    {
+        myCurrentTime = -1;
+    }
+
+
+    /**
+     * Advance to the next frame in the animation.
+     */
+    public void nextFrame ()
+    {
+        myCurrentTime += 1.0 / NUM_FRAMES;
+    }
+    
     /**
      * Evaluate an expression for each point in the image.
      */
@@ -27,6 +42,7 @@ public class Model
         // create expression to evaluate just once
         
         Expression toEval = new Parser().makeExpression(input);
+        HashMap<String, RGBColor> varMap = new HashMap<String, RGBColor>();
 
         // evaluate at each pixel
         for (int imageY = 0; imageY < size.height; imageY++)
@@ -34,10 +50,13 @@ public class Model
             double evalY = imageToDomainScale(imageY, size.height);
             for (int imageX = 0; imageX < size.width; imageX++)
             {
-            	//System.out.println(varValues.get("foo"));
                 double evalX = imageToDomainScale(imageX, size.width);
+                varMap.put("x", new RGBColor(evalX));
+                varMap.put("y", new RGBColor(evalY));
+                varMap.put("t", new RGBColor(myCurrentTime));
+                
                 result.setColor(imageX, imageY,
-                                toEval.evaluate(evalX, evalY).toJavaColor());
+                                toEval.evaluate(varMap).toJavaColor());
             }
         }
         return result;

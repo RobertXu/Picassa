@@ -161,7 +161,6 @@ public class RGBColor implements Comparable<RGBColor>, Iterable<Double>
      * @return negative integer, zero, or a positive integer as this object is 
      * less than, equal to, or greater than given object.
      */
-    @Override
     public int compareTo (RGBColor other)
     {
         return Double.compare(toGreyScale().getRed(), other.toGreyScale().getRed());

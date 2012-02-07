@@ -4,42 +4,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import expression.AbsValue;
-import expression.ArcTanExp;
-import expression.Ceiling;
-import expression.Clamp;
-import expression.ColorMaker;
-import expression.Constant;
-import expression.CosExp;
-import expression.Divide;
-import expression.Exponent;
-import expression.Expression;
-import expression.ExpressionFactory;
-import expression.Floor;
-import expression.LetExp;
-import expression.LogExp;
-import expression.Minus;
-import expression.Modulus;
-import expression.Multiply;
-import expression.Negate;
-import expression.PerlinBW;
-import expression.PerlinColor;
-import expression.Plus;
-import expression.RGBToYCrCb;
-import expression.RandomColor;
-import expression.SinExp;
-import expression.TanExp;
-import expression.Variable;
-import expression.WrapExp;
-import expression.X;
-import expression.Y;
-import expression.YCrCbtoRGB;
-
-
+import model.expression.*;
 
 public class Parser
 {	   
-	static ExpressionFactory[] allExpressions = {new ColorMaker.Factory(), 
+	private static ExpressionFactory[] allExpressions = {new ColorMaker.Factory(), 
 												 new Divide.Factory(), 
 												 new Exponent.Factory(), 
 												 new Minus.Factory(), 
@@ -47,8 +16,6 @@ public class Parser
 												 new Multiply.Factory(),
 												 new Negate.Factory(),
 												 new Plus.Factory(),
-												 new X.Factory(),
-												 new Y.Factory(),
 												 new Constant.Factory(),
 												 new RandomColor.Factory(),
 												 new Floor.Factory(),
@@ -66,7 +33,13 @@ public class Parser
 												 new PerlinBW.Factory(),
 												 new WrapExp.Factory(),
 												 new LetExp.Factory(),
-												 new Variable.Factory()};
+												 new Variable.Factory(),
+												 new IfExp.Factory(),
+												 new SumExp.Factory(),
+												 new ProductExp.Factory(),
+												 new AverageExp.Factory(),
+												 new Min.Factory(),
+												 new Max.Factory()};
 	
 	// double is made up of an optional negative sign, followed by a sequence 
     // of one or more digits, optionally followed by a period, then possibly 
@@ -76,14 +49,14 @@ public class Parser
     // expression begins with a left paren followed by the command name, 
     // which is a sequence of alphabetic characters
     private static final Pattern EXPRESSION_BEGIN_REGEX =
-        Pattern.compile("\\(([a-z]+)");
+        Pattern.compile("\\(([a-z+-/%*^!]+)");
     private static final Pattern VARIABLE_REGEX =
     		Pattern.compile("\\w+");
 
     // different possible kinds of expressions
     private static enum ExpressionType
     {
-        NUMBER, PAREN_EXPRESSION, X, Y, VARIABLE;
+        NUMBER, PAREN_EXPRESSION, VARIABLE;
     }
 
 
@@ -114,13 +87,20 @@ public class Parser
 
     private ExpressionType getExpressionType ()
     {
-        skipWhiteSpace();
-        if (isNumber())          return ExpressionType.NUMBER;
-        if (isParenExpression()) return ExpressionType.PAREN_EXPRESSION;
-        if(isX()) return ExpressionType.X;   	
-        if(isY()) return ExpressionType.Y;
-        if(isVariable())return ExpressionType.VARIABLE;
-        else                     throw new ParserException("Unexpected Character " + currentCharacter());
+    	skipWhiteSpace();
+    	Matcher doubleMatcher = DOUBLE_REGEX.matcher(myInput.substring(myCurrentPosition));
+    	if (doubleMatcher.lookingAt())
+    	    return ExpressionType.NUMBER;
+    	        
+    	Matcher expMatcher = EXPRESSION_BEGIN_REGEX.matcher(myInput.substring(myCurrentPosition));
+    	if(expMatcher.lookingAt())
+    	    return ExpressionType.PAREN_EXPRESSION;
+    	 
+    	Matcher varMatcher = VARIABLE_REGEX.matcher(myInput.substring(myCurrentPosition));
+    	if(varMatcher.lookingAt())
+    	    return ExpressionType.VARIABLE;
+    	
+        else throw new ParserException("Unexpected Character " + currentCharacter());
     }
     
     private Expression expressionCreator(String command, ArrayList<Expression> currentExp, double value)
@@ -130,7 +110,7 @@ public class Parser
     		if (now.isThisKindOfExp(command, currentExp))
     			return now.ParseExpression(value, currentExp);	
     	}
-    	return null;
+    	throw new ParserException("Unexpected Input");
     }
 
     private Expression parseExpression ()
@@ -141,59 +121,12 @@ public class Parser
                 return parseNumber();
             case PAREN_EXPRESSION:
                 return parseParenExpression();
-            case X:
-             	return parseX();
-            case Y:
-            	return parseY();	
             case VARIABLE:
             	return parseVariable();
             default:
                 throw new ParserException("Unexpected expression type " +
                                           getExpressionType().toString());
         }
-    }
-
-    private boolean isNumber ()
-    {
-        Matcher doubleMatcher =
-            DOUBLE_REGEX.matcher(myInput.substring(myCurrentPosition));
-        return doubleMatcher.lookingAt();
-    }
-    
-    private boolean isX()
-    {
-    	return (currentCharacter() == 'x');
-    }
-    
-    private boolean isY()
-    {
-    	return (currentCharacter() == 'y');
-    }
-
-    private boolean isParenExpression ()
-    {
-        Matcher expMatcher =
-            EXPRESSION_BEGIN_REGEX.matcher(myInput.substring(myCurrentPosition));
-        return expMatcher.lookingAt();
-    }
-    
-    private boolean isVariable()
-    {
-    	Matcher varMatcher =
-    			VARIABLE_REGEX.matcher(myInput.substring(myCurrentPosition));
-    	return varMatcher.lookingAt();
-    }
-    
-    private Expression parseX()
-    {
-    	myCurrentPosition++;
-    	return expressionCreator("x" , new ArrayList<Expression>(), 0);
-    }
-    
-    private Expression parseY()
-    {
-    	myCurrentPosition++;
-    	return expressionCreator("y", new ArrayList<Expression>(), 0);
     }
 
     private Expression parseNumber ()
@@ -213,8 +146,7 @@ public class Parser
     {
     	Matcher varMatcher = VARIABLE_REGEX.matcher(myInput);
     	varMatcher.find(myCurrentPosition);
-    	String varMatch =
-    			myInput.substring(varMatcher.start(), varMatcher.end());
+    	String varMatch = myInput.substring(varMatcher.start(), varMatcher.end());
     	myCurrentPosition = varMatcher.end();
     	
     	return expressionCreator(varMatch, new ArrayList<Expression>(), 0);
@@ -263,5 +195,4 @@ public class Parser
     {
         return myCurrentPosition < myInput.length();
     }
-
 }
