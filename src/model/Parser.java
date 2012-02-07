@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,13 +54,16 @@ public class Parser
         Pattern.compile("\\(([a-z+-/%*^!]+)");
     private static final Pattern VARIABLE_REGEX =
     		Pattern.compile("\\w+");
+    private static HashMap<Pattern, ExpressionType> patternMap = new HashMap<Pattern, ExpressionType>()
+    		{{put(DOUBLE_REGEX, ExpressionType.NUMBER);
+    		  put(EXPRESSION_BEGIN_REGEX, ExpressionType.PAREN_EXPRESSION);
+    		  put(VARIABLE_REGEX, ExpressionType.VARIABLE);}};
 
     // different possible kinds of expressions
     private static enum ExpressionType
     {
         NUMBER, PAREN_EXPRESSION, VARIABLE;
     }
-
 
     // state of the parser
     private int myCurrentPosition;
@@ -88,19 +93,15 @@ public class Parser
     private ExpressionType getExpressionType ()
     {
     	skipWhiteSpace();
-    	Matcher doubleMatcher = DOUBLE_REGEX.matcher(myInput.substring(myCurrentPosition));
-    	if (doubleMatcher.lookingAt())
-    	    return ExpressionType.NUMBER;
-    	        
-    	Matcher expMatcher = EXPRESSION_BEGIN_REGEX.matcher(myInput.substring(myCurrentPosition));
-    	if(expMatcher.lookingAt())
-    	    return ExpressionType.PAREN_EXPRESSION;
-    	 
-    	Matcher varMatcher = VARIABLE_REGEX.matcher(myInput.substring(myCurrentPosition));
-    	if(varMatcher.lookingAt())
-    	    return ExpressionType.VARIABLE;
     	
-        else throw new ParserException("Unexpected Character " + currentCharacter());
+    	for(Pattern p: patternMap.keySet())
+    	{
+    		Matcher expMatch = p.matcher(myInput.substring(myCurrentPosition));
+    		if(expMatch.lookingAt())
+    			return patternMap.get(p);
+    	}
+    	
+       throw new ParserException("Unexpected Character " + currentCharacter());
     }
     
     private Expression expressionCreator(String command, ArrayList<Expression> currentExp, double value)

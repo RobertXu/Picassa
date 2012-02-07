@@ -30,7 +30,7 @@ public class Model
      */
     public void nextFrame ()
     {
-        myCurrentTime += 1.0 / NUM_FRAMES;
+        myCurrentTime += 2.0 / NUM_FRAMES;
     }
     
     /**

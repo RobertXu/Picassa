@@ -5,7 +5,6 @@ import java.util.List;
 import model.RGBColor;
 
 
-
 public class Divide extends OperandExp
 {
 	public Divide(List<Expression> toCreate)
