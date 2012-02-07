@@ -98,7 +98,7 @@ public class Frame extends JFrame
         TimerTask task = new TimerTask()
             {
                 private int index = 0;
-                @Override
+                
                 public void run ()
                 {
                     try

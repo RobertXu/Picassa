@@ -17,20 +17,19 @@ public class Model
 
     public static final int NUM_FRAMES = 50;
 
-    private double myCurrentTime = -1;
+    private double myCurrentTime = 0;
 
     public void reset ()
     {
-        myCurrentTime = -1;
+        myCurrentTime = 0;
     }
-
 
     /**
      * Advance to the next frame in the animation.
      */
     public void nextFrame ()
     {
-        myCurrentTime += 2.0 / NUM_FRAMES;
+        myCurrentTime += 1.0 / NUM_FRAMES;
     }
     
     /**
@@ -53,7 +52,7 @@ public class Model
                 double evalX = imageToDomainScale(imageX, size.width);
                 varMap.put("x", new RGBColor(evalX));
                 varMap.put("y", new RGBColor(evalY));
-                varMap.put("t", new RGBColor(myCurrentTime));
+                varMap.put("t", new RGBColor(2*myCurrentTime-1));
                 
                 result.setColor(imageX, imageY,
                                 toEval.evaluate(varMap).toJavaColor());
