@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +17,6 @@ public class Parser
 												 new Multiply.Factory(),
 												 new Negate.Factory(),
 												 new Plus.Factory(),
-												 new Constant.Factory(),
 												 new RandomColor.Factory(),
 												 new Floor.Factory(),
 												 new Ceiling.Factory(),
@@ -35,7 +33,6 @@ public class Parser
 												 new PerlinBW.Factory(),
 												 new WrapExp.Factory(),
 												 new LetExp.Factory(),
-												 new Variable.Factory(),
 												 new IfExp.Factory(),
 												 new SumExp.Factory(),
 												 new ProductExp.Factory(),
@@ -104,12 +101,12 @@ public class Parser
        throw new ParserException("Unexpected Character " + currentCharacter());
     }
     
-    private Expression expressionCreator(String command, ArrayList<Expression> currentExp, double value)
+    private Expression expressionCreator(String command, ArrayList<Expression> currentExp)
     {    	
     	for (ExpressionFactory now: allExpressions)
     	{
     		if (now.isThisKindOfExp(command, currentExp))
-    			return now.ParseExpression(value, currentExp);	
+    			return now.ParseExpression(currentExp);	
     	}
     	throw new ParserException("Unexpected Input");
     }
@@ -140,7 +137,7 @@ public class Parser
         // this represents the color gray of the given intensity
         double value = Double.parseDouble(numberMatch);
         
-        return expressionCreator("", new ArrayList<Expression>(), value);
+        return new Constant(value);
     }
     
     private Expression parseVariable()
@@ -150,7 +147,7 @@ public class Parser
     	String varMatch = myInput.substring(varMatcher.start(), varMatcher.end());
     	myCurrentPosition = varMatcher.end();
     	
-    	return expressionCreator(varMatch, new ArrayList<Expression>(), 0);
+    	return new Variable(varMatch);
     }
 
 
@@ -169,7 +166,7 @@ public class Parser
         	if (currentCharacter() == ')')
         	{
         		myCurrentPosition++;
-        		return expressionCreator(commandName, elements, 0);
+        		return expressionCreator(commandName, elements);
         	}
         	
         	elements.add(parseExpression());

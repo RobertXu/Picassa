@@ -26,7 +26,7 @@ public class PerlinColor extends OperandExp
 			return (command.equals("perlinColor") && currentExp.size() == 2);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new PerlinColor(currentExp);
 		}

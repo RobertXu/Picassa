@@ -29,7 +29,7 @@ public class Negate extends OperandExp
 			return ((command.equals("neg") || command.equals("!")) && currentExp.size() == 1);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new Negate(currentExp);
 		}

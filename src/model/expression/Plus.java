@@ -32,7 +32,7 @@ public class Plus extends OperandExp
 		}
 
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new Plus(currentExp);
 		}

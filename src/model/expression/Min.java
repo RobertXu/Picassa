@@ -30,7 +30,7 @@ public class Min extends OperandExp
 			return (command.equals("min") && currentExp.size() > 0);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new Min(currentExp);
 		}

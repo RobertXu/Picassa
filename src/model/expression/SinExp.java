@@ -30,7 +30,7 @@ public class SinExp extends OperandExp
 			return (command.equals("sin") && currentExp.size() == 1);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new SinExp(currentExp);
 		}

@@ -30,7 +30,7 @@ public class Modulus extends OperandExp
 			return((command.equals("mod") || command.equals("%")) && currentExp.size() == 2);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp) 
+		public Expression ParseExpression(List<Expression> currentExp) 
 		{
 			return new Modulus(currentExp);
 		}

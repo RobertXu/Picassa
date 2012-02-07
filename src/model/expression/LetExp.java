@@ -48,7 +48,7 @@ public class LetExp extends OperandExp
 			return(command.equals("let") && currentExp.size() == 3);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp) 
+		public Expression ParseExpression(List<Expression> currentExp) 
 		{
 			return new LetExp(currentExp);
 		}

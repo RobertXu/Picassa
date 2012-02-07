@@ -26,7 +26,7 @@ public class RGBToYCrCb extends OperandExp
 			return (command.equals("rgbToYCrCb") && currentExp.size() == 1);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new RGBToYCrCb(currentExp);
 		}

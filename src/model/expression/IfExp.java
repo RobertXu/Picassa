@@ -31,7 +31,7 @@ public class IfExp extends OperandExp
 			return (command.equals("if") && currentExp.size() == 3);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new IfExp(currentExp);
 		}

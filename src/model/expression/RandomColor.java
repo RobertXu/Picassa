@@ -31,11 +31,9 @@ public class RandomColor implements Expression
 			return (command.equals("random") && currentExp.size() == 0);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new RandomColor();
 		}
 	}
-
-
 }

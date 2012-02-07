@@ -30,7 +30,7 @@ public class Max extends OperandExp
 			return (command.equals("max") && currentExp.size() > 0);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new Max(currentExp);
 		}

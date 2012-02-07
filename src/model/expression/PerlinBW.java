@@ -26,7 +26,7 @@ public class PerlinBW extends OperandExp
 			return (command.equals("perlinBW") && currentExp.size() == 2);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new PerlinBW(currentExp);
 		}

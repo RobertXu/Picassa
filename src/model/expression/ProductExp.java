@@ -33,7 +33,7 @@ public class ProductExp extends OperandExp
 			return (command.equals("product") && currentExp.size() > 0);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new ProductExp(currentExp);
 		}

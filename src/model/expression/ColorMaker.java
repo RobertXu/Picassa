@@ -30,7 +30,7 @@ public class ColorMaker extends OperandExp
 			return (command.equals("color") && currentExp.size() == 3);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp) 
+		public Expression ParseExpression(List<Expression> currentExp) 
 		{
 			return new ColorMaker(currentExp);
 		}

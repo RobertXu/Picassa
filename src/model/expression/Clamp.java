@@ -41,7 +41,7 @@ public class Clamp extends OperandExp
 			return (command.equals("clamp") && currentExp.size() == 1);
 		}
 	
-		public Expression ParseExpression(double value, List<Expression> currentExp)
+		public Expression ParseExpression(List<Expression> currentExp)
 		{
 			return new Clamp(currentExp);
 		}

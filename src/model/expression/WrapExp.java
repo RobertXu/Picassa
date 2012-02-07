@@ -30,7 +30,7 @@ public class WrapExp extends OperandExp
 			return(command.equals("wrap") && currentExp.size() == 1);
 		}
 
-		public Expression ParseExpression(double value, List<Expression> currentExp) 
+		public Expression ParseExpression(List<Expression> currentExp) 
 		{
 			return new WrapExp(currentExp);
 		}
