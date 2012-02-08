@@ -16,11 +16,9 @@ public class WrapExp extends OperandExp
 	public RGBColor Calculate(List<RGBColor> toModify) 
 	{
 		RGBColor toChange = toModify.get(0);
-		double newRed = RGBColor.wrap(toChange.getRed());
-		double newGreen = RGBColor.wrap(toChange.getGreen());
-		double newBlue = RGBColor.wrap(toChange.getBlue());
+		toChange.wrap();
 		
-		return new RGBColor(newRed, newGreen, newBlue);
+		return toChange;
 	}
 
 	public static class Factory extends ExpressionFactory

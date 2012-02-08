@@ -5,7 +5,6 @@ import java.util.List;
 import model.RGBColor;
 
 
-
 public class ColorMaker extends OperandExp
 {
 	public ColorMaker(List<Expression> toCreate)

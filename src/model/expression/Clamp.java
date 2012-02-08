@@ -15,24 +15,10 @@ public class Clamp extends OperandExp
 	
 	public RGBColor Calculate(List<RGBColor> toModify) 
 	{
-		RGBColor toChange = toModify.get(0);
-		double newRed = CalculateHelper(toChange.getRed());
-		double newGreen = CalculateHelper(toChange.getGreen());
-		double newBlue = CalculateHelper(toChange.getBlue());
+		toModify.get(0).clamp();
 		
-		return new RGBColor(newRed, newGreen, newBlue);
+		return toModify.get(0);
 	}
-	
-	public double CalculateHelper(double toClamp)
-	{
-		if (toClamp > 1.0)
-			return 1.0;
-		if (toClamp < -1.0)
-			return -1.0;
-		
-		return toClamp;
-	}
-	
 	
 	public static class Factory extends ExpressionFactory
 	{
